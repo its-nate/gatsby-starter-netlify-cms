@@ -5,33 +5,46 @@ import Helmet from 'react-helmet'
 import { graphql, Link } from 'gatsby'
 import Layout from '../components/Layout'
 import Content, { HTMLContent } from '../components/Content'
+import { Disqus, CommentCount } from "gatsby-plugin-disqus";
 
 export const BlogPostTemplate = ({
+  id,
   content,
   contentComponent,
   description,
   tags,
   title,
+  author,
   helmet,
 }) => {
+  let disqusConfig = {
+    url: `${config.siteUrl + location.pathname}`,
+    // url: `localhost:8000`,
+    identifier: id,
+    title: title,
+  };
+
   const PostContent = contentComponent || Content
 
   return (
     <section className="section">
-      {helmet || ''}
+      {helmet || ""}
       <div className="container content">
         <div className="columns">
           <div className="column is-10 is-offset-1">
             <h1 className="title is-size-2 has-text-weight-bold is-bold-light">
               {title}
             </h1>
+            <Link to={`/author/${author}/`}>
+              <h3>{author}</h3>
+            </Link>
             <p>{description}</p>
             <PostContent content={content} />
             {tags && tags.length ? (
               <div style={{ marginTop: `4rem` }}>
                 <h4>Tags</h4>
                 <ul className="taglist">
-                  {tags.map(tag => (
+                  {tags.map((tag) => (
                     <li key={tag + `tag`}>
                       <Link to={`/tags/${kebabCase(tag)}/`}>{tag}</Link>
                     </li>
@@ -39,11 +52,13 @@ export const BlogPostTemplate = ({
                 </ul>
               </div>
             ) : null}
+            <CommentCount config={disqusConfig} placeholder={'...'} />
+            <Disqus config={disqusConfig} />
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 BlogPostTemplate.propTypes = {
@@ -63,6 +78,7 @@ const BlogPost = ({ data }) => {
         content={post.html}
         contentComponent={HTMLContent}
         description={post.frontmatter.description}
+        author={post.frontmatter.author}
         helmet={
           <Helmet titleTemplate="%s | Blog">
             <title>{`${post.frontmatter.title}`}</title>
@@ -74,6 +90,7 @@ const BlogPost = ({ data }) => {
         }
         tags={post.frontmatter.tags}
         title={post.frontmatter.title}
+        id={post.id}
       />
     </Layout>
   )
@@ -97,6 +114,7 @@ export const pageQuery = graphql`
         title
         description
         tags
+        author
       }
     }
   }
