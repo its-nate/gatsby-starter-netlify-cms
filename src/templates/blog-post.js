@@ -17,8 +17,9 @@ export const BlogPostTemplate = ({
   author,
   helmet,
 }) => {
+  console.log()
   let disqusConfig = {
-    url: `${config.siteUrl + location.pathname}`,
+    // url: `${config.siteUrl + location.pathname}`,
     // url: `localhost:8000`,
     identifier: id,
     title: title,
