@@ -6,6 +6,7 @@ import { graphql, Link } from 'gatsby'
 import Layout from '../components/Layout'
 import Content, { HTMLContent } from '../components/Content'
 import { Disqus, CommentCount } from "gatsby-plugin-disqus";
+import useSiteMetadata from "../components/SiteMetadata";
 
 export const BlogPostTemplate = ({
   id,
@@ -17,7 +18,9 @@ export const BlogPostTemplate = ({
   author,
   helmet,
 }) => {
-  console.log()
+  const { url } = useSiteMetadata();
+  console.log("Logging url here:")
+  console.log(url);
   let disqusConfig = {
     // url: `${config.siteUrl + location.pathname}`,
     // url: `localhost:8000`,
